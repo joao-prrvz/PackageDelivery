@@ -4,45 +4,45 @@ CREATE DATABASE `package_delivery`;
 
 USE `package_delivery`;
 
-CREATE TABLE `Employee`(
+CREATE TABLE `Employe`(
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `lastName` VARCHAR(500) NOT NULL,
-    `firstName` VARCHAR(500) NOT NULL,
+    `nom` VARCHAR(500) NOT NULL,
+    `prenom` VARCHAR(500) NOT NULL,
     `email` VARCHAR(300) NOT NULL,
-    `password` VARCHAR(500) NOT NULL,
-    `isDeliveryPerson` BOOLEAN NOT NULL DEFAULT TRUE
+    `motDePasse` VARCHAR(500) NOT NULL,
+    `estLivreur` BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE `DeliveryRoute`(
+CREATE TABLE `RouteLivraison`(
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `dateDelivery` DATE NOT NULL,
-    `creatorId` INT UNSIGNED NOT NULL,
-	CONSTRAINT fk_deliveryroute_creator
-        FOREIGN KEY (`creatorId`) REFERENCES `Employee`(id)
+    `dateRoute` DATE NOT NULL,
+    `createurId` INT UNSIGNED NOT NULL,
+	CONSTRAINT fk_routelivraison_createur
+        FOREIGN KEY (`createurId`) REFERENCES `Employe`(id)
         ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE TABLE `Package`(
+CREATE TABLE `Paquet`(
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    `postalNumber` VARCHAR(500) NOT NULL,
-    `recipientFirstName` VARCHAR(500) NOT NULL,
-    `recipientLastName` VARCHAR(300) NOT NULL,
-    `recipientAddress` VARCHAR(300) NOT NULL,
-    `addressLatitude` FLOAT NOT NULL,
-    `addressLongitude` FLOAT NOT NULL,
-    `status` ENUM('Not delivered', 'Delivering', 'Delivered') NOT NULL DEFAULT 'Not delivered',
-    `creatorId` INT UNSIGNED NOT NULL,
-    `deliveryDate` DATE NOT NULL,
-    `deliveryPersonId` INT UNSIGNED NOT NULL,
-    `routeIndex` INT UNSIGNED DEFAULT NULL,
-    `deliveryRouteId` INT UNSIGNED DEFAULT NULL,
-	CONSTRAINT fk_package_creator
-        FOREIGN KEY (`creatorId`) REFERENCES `Employee`(id)
+    `numeroPostal` VARCHAR(500) NOT NULL,
+    `nomDestinataire` VARCHAR(500) NOT NULL,
+    `prenomDestinataire` VARCHAR(300) NOT NULL,
+    `adresseDestinataire` VARCHAR(300) NOT NULL,
+    `latitudeAdresse` FLOAT NOT NULL,
+    `longitudeAdresse` FLOAT NOT NULL,
+    `statutLivraison` ENUM('Not delivered', 'Delivering', 'Delivered') NOT NULL DEFAULT 'Not delivered',
+    `createurId` INT UNSIGNED NOT NULL,
+    `dateLivraison` DATE NOT NULL,
+    `livreurId` INT UNSIGNED NOT NULL,
+    `ordreRouteLivraison` INT UNSIGNED DEFAULT NULL,
+    `routeLivraisonId` INT UNSIGNED DEFAULT NULL,
+	CONSTRAINT fk_paquet_createur
+        FOREIGN KEY (`createurId`) REFERENCES `Employe`(id)
         ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT fk_package_deliveryperson
-        FOREIGN KEY (`deliveryPersonId`) REFERENCES `Employee`(id)
+	CONSTRAINT fk_paquet_livreur
+        FOREIGN KEY (`livreurId`) REFERENCES `Employe`(id)
         ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT fk_package_deliveryroute
-        FOREIGN KEY (`deliveryRouteId`) REFERENCES `DeliveryRoute`(id)
+	CONSTRAINT fk_paquet_routelivraison
+        FOREIGN KEY (`routeLivraisonId`) REFERENCES `RouteLivraison`(id)
         ON DELETE CASCADE ON UPDATE RESTRICT
 );

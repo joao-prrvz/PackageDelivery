@@ -1,12 +1,13 @@
 -- =============================================================
--- FAKE DATA — packet-delivery
+-- FAKE DATA — package_delivery
 -- 1 admin + 5 drivers, bcrypt password for all
 -- 5 packages per driver (assigned) + 10 unassigned packages
 -- Real Geneva, Switzerland addresses with real coordinates
 -- =============================================================
 
 USE `package_delivery`;
-INSERT INTO Employee (id, lastName, firstName, email, password, isDeliveryPerson) VALUES
+
+INSERT INTO Employe (id, nom, prenom, email, motDePasse, estLivreur) VALUES
 (1, 'Admin', 'System', 'admin@company.com', '$2a$12$dHBrZQ70cTZfxRdIlwywteKkHF9BnUefQaA1tyRo5KhCD/iH7IRom', FALSE),
 
 (2, 'Dupont', 'Marc', 'marc.dupont@example.com', '$2a$12$dHBrZQ70cTZfxRdIlwywteKkHF9BnUefQaA1tyRo5KhCD/iH7IRom', TRUE),
@@ -18,11 +19,10 @@ INSERT INTO Employee (id, lastName, firstName, email, password, isDeliveryPerson
 (8, 'Bertrand', 'Hugo', 'hugo.bertrand@example.com', '$2a$12$dHBrZQ70cTZfxRdIlwywteKkHF9BnUefQaA1tyRo5KhCD/iH7IRom', TRUE);
 
 
-
-INSERT INTO Package (
-    postalNumber, recipientFirstName, recipientLastName, recipientAddress,
-    addressLatitude, addressLongitude, status,
-    creatorId, deliveryDate, deliveryPersonId, deliveryRouteId
+INSERT INTO Paquet (
+    numeroPostal, prenomDestinataire, nomDestinataire, adresseDestinataire,
+    latitudeAdresse, longitudeAdresse, statutLivraison,
+    createurId, dateLivraison, livreurId, routeLivraisonId
 ) VALUES
 ('1204', 'Alice', 'Martin', 'Rue du Rhône 40, Geneva', 46.2037, 6.1470, 'Not delivered', 1, CURDATE(), 2, NULL),
 ('1205', 'Bob', 'Durand', 'Rue de Carouge 85, Geneva', 46.1915, 6.1383, 'Delivering', 1, CURDATE(), 2, NULL),
