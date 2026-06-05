@@ -61,35 +61,70 @@ const greenIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 const pkgs = []
+
 /**
- * @param  {...{id: number, latitude: number, longitude: number, routeIndex: number|null}} packages 
+ * @param  {...{id: number, latitude: number, longitude: number, routeIndex: number|null, status: string}} packages 
  */
 function addPackages(...packages) {
     packages.sort((a, b) => a.routeIndex - b.routeIndex);
     let routeIndex = 0;
     for (const package of packages) {
         const coordinates = [package.latitude, package.longitude];
-        const marker = L.marker(coordinates, {icon: icons.get("black")});
-        marker.addEventListener("click", () => {
-            if (package.routeIndex !== null)
-                return;
+        const color =  getColorFromStatus(packages, package);
+        const icon = icons.get(color);
+        const marker = L.marker(coordinates, {icon: icon});
+        if (package.status === "Delivering" || package.status === "Delivered") {
             polyLines.addLatLng(coordinates);
-            package.routeIndex = routeIndex;
-            marker.options.icon = package.routeIndex == 0 ? icons.get("blue") : icons.get("red");
-            marker.removeFrom(map);
-            marker.addTo(map);
-            if (routeIndex >= pkgs.length - 1)
-                modal.show();
-            routeIndex++;
-        });
+            if (color == "blue") {
+                marker.addEventListener("click", async () => {
+                    const response = await fetch(`/package/${package.id}/deliver`, { method: "POST" });
+                    location.reload();
+                });
+            }
+        }
+        else if(package.status == "Not delivered") {
+            marker.addEventListener("click", () => {
+                if (package.routeIndex !== null)
+                    return;
+                polyLines.addLatLng(coordinates);
+                package.routeIndex = routeIndex;
+                marker.options.icon = package.routeIndex == 0 ? icons.get("blue") : icons.get("red");
+                marker.removeFrom(map);
+                marker.addTo(map);
+                if (routeIndex >= pkgs.length - 1)
+                    modal.show();
+                routeIndex++;
+            });
+        }
+
         marker.addTo(map);
 
         pkgs.push(package);
     }
 }
+/**
+ * 
+ * @param {{id: number, latitude: number, longitude: number, routeIndex: number|null, status: string}[]} packages 
+ * @param {{id: number, latitude: number, longitude: number, routeIndex: number|null, status: string}} package 
+ * @returns 
+ */
+function getColorFromStatus(packages, package) {
+    switch(package.status) {
+        case "Not delivered":
+            return "black";
+        case "Delivering":
+            if (package.routeIndex == 0)
+                return "blue";
+            if (packages[package.routeIndex - 1].status == "Delivered")
+                return "blue";
+            return "red";
+        case "Delivered":
+            return "green";
+    }
+}
 
 modal.addEventListener("close", () => {
-
+    location.reload();
 });
 
 form.addEventListener("submit", async e => {
@@ -98,5 +133,6 @@ form.addEventListener("submit", async e => {
         method: "POST",
         body: JSON.stringify({packages: pkgs})
     });
+    location.reload();
     console.log(await response.text());
 });

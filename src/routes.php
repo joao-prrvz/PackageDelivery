@@ -16,6 +16,8 @@ return (function(App $app) {
         $group->post("/package", [PackageController::class, "create"]);
         $group->get("/package/{id}", [PackageController::class, "showEdit"]);
         $group->post("/package/{id}", [PackageController::class, "edit"]);
+        $group->post("/package/{id}/deliver", [PackageController::class, "deliver"]);
+
 
         $group->post("/route", [DeliveryRouteController::class, "create"]);
     })->add(Auth::class);

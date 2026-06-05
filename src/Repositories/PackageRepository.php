@@ -62,8 +62,8 @@ class PackageRepository {
     public function selectInfosByEmployeeAndDate(Employee $empl, DateTime $date): array {
         return $this->ctx->packages
             ->where(fn($p) => $p->deliveryPersonId == $empl->id)
+            ->orderBy(fn($p) => $p->routeIndex)
             ->where(fn($p) => $p->deliveryDate->format("Y-m-d") === $date->format("Y-m-d"))
-            
             ->toArray();
     }
 }

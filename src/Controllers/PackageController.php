@@ -1,6 +1,7 @@
 <?php
 namespace PackageDelivery\Controllers;
 
+use PackageDelivery\Enums\PackageStatus;
 use PackageDelivery\Models\Package;
 use PackageDelivery\Repositories\EmployeeRepository;
 use PackageDelivery\Repositories\PackageRepository;
@@ -146,5 +147,12 @@ class PackageController extends BaseController {
 
         $this->pkgRepo->update($pkg);
         return $this->redirect("/");
+    }
+
+    public function deliver(Request $req, Response $resp, array $args): Response {
+        $pkg = $this->pkgRepo->selectById((int)$args["id"]);
+        $pkg->status = PackageStatus::DELIVERED;
+        $this->pkgRepo->update($pkg);
+        return $resp;
     }
 }

@@ -3,6 +3,7 @@ namespace PackageDelivery\Controllers;
 
 use DateTime;
 use Override;
+use PackageDelivery\Enums\PackageStatus;
 use PackageDelivery\Models\DeliveryRoute;
 use PackageDelivery\Repositories\DeliveryRouteRespository;
 use PackageDelivery\Repositories\PackageRepository;
@@ -34,6 +35,7 @@ class DeliveryRouteController extends BaseController {
         $id = $this->delRouteRep->insert($route);
         foreach ($data->packages as $pkgRoute) {
             $pkg = $pkgRoute->apply($this->pkgRep->selectById($pkgRoute->id));
+            $pkg->status = PackageStatus::DELIVERING;
             $pkg->deliveryRouteId = $id;
             $this->pkgRep->update($pkg);
         }
