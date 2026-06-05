@@ -1,0 +1,43 @@
+<?php
+use PackageDelivery\Models\Package;
+
+/** @var Package[] $packages */
+/** @var DateTime $date */
+/** @var array $infos */
+$interval = new DateInterval("P1D");
+?>
+
+<main class="flex-1 flex-col flex items-center p-4">
+    <div class="join mb-4">
+        <a href="?date=<?= (clone $date)->sub($interval)->format('Y-m-d') ?>" class="join-item btn">«</a>
+
+        <a href="?date=<?= (new DateTime())->format('Y-m-d') ?>" class="join-item btn text-2xl">
+            <?= $date->format('Y-m-d') ?>
+        </a>
+
+        <a href="?date=<?= (clone $date)->add($interval)->format('Y-m-d') ?>" class="join-item btn">»</a>
+    </div>
+    <div id="map" class="h-full w-full rounded">
+
+    </div>
+
+    <dialog id="modal" class="modal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Finish your route</h3>
+            <p class="py-4">A new route will be created, it won't be possible to edit it after that</p>
+            <div class="flex">
+                <form id="form" action="/route" class="flex w-full" method="post">
+                    <button class="ml-auto btn btn-primary">Ok</button>
+                </form>
+                <form method="dialog">
+                    <button class="ml-4 btn btn-error">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </dialog>
+</main>
+
+<script src="/js/deliveryHome.js"></script>
+<script>
+    addPackages(...<?= json_encode($infos) ?>);
+</script>

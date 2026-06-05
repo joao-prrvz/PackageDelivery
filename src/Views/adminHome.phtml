@@ -1,0 +1,124 @@
+<?php
+
+use PackageDelivery\Enums\PackageStatus;
+use PackageDelivery\Models\Employee;
+use PackageDelivery\Models\Package;
+use PackageDelivery\Schemas\HomeSearch;
+
+/** @var Employee[] $employees */ 
+/** @var Package[] $packages */ 
+/** @var HomeSearch $search */ 
+
+/**
+ * @param PackageStatus $status
+ */
+function getStatusBadgeColor(PackageStatus $status) {
+    switch($status) {
+        case PackageStatus::DELIVERED:
+            return "success";
+        case PackageStatus::DELIVERING:
+            return "warning";
+        case PackageStatus::NOT_DELIVERED:
+            return "error";
+    }
+    return "primary";
+}
+
+?>
+<main class="flex-1 flex overflow-hidden">
+<div class="w-full h-full flex justify-evenly items-center p-4">
+    <div class="flex items-end h-full w-150 ">
+        <form class="h-full bg-base-200 rounded w-full p-4 flex flex-col">
+            <h1 class="text-2xl font-bold text-center mb-4">Packages</h1>
+            <div class="join w-full">
+                <label class="join-item input flex-1">
+                    <i class="bi bi-search"></i>
+                    <input type="search" class="grow" placeholder="Search" name="pkgQuery" value="<?= $search->pkgQuery?>" />
+                    <input class="hidden" type="search"name="emplQuery" value="<?= $search->emplQuery?>" />
+                </label>
+                <button class="btn btn-primary join-item">Search</button>
+            </div>
+            <ul class="menu bg-base-100 rounded-box shadow-md my-4 flex-1 overflow-y-auto w-full overflow-x-hidden flex-col flex-nowrap">
+                <? foreach($packages as $pkg): ?>
+                <li>
+                    <a class="p-4" onclick="packageOnClick(event)" data-id="<?= $pkg->id ?>" >
+                        <p><?= $pkg->postalNumber ?> - <?= $pkg->recipientAddress ?></p>
+                        <span class="badge badge-<?= getStatusBadgeColor($pkg->status) ?>">
+                            <?= $pkg->status->value ?>
+                        </span>
+                    </a>
+                </li>
+                <? endforeach ?>
+            </ul>
+        </form>
+        <div class="flex flex-col ml-2">
+            <a href="/package">
+                <i class="text-3xl bi bi-plus-circle"></i>
+            </a>
+            <a href="/" onclick="packageUpdateOnClick(event)">
+                <i class="text-3xl bi bi-pencil-square"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="flex items-end h-full w-150 ">
+        <form class="h-full bg-base-200 rounded w-full p-4 flex flex-col">
+            <h1 class="text-2xl font-bold text-center mb-4">Delivery Persons</h1>
+            <div class="join w-full">
+                <label class="join-item input flex-1">
+                    <i class="bi bi-search"></i>
+                    <input type="search" class="grow" placeholder="Search" name="emplQuery" value="<?= $search->emplQuery?>" />
+                    <input class="hidden" type="search"name="pkgQuery" value="<?= $search->pkgQuery?>" />
+                </label>
+                <button class="btn btn-primary join-item">Search</button>
+            </div>
+            <ul class="menu bg-base-100 rounded-box shadow-md my-4 flex-1 overflow-y-auto w-full">
+                <? foreach ($employees as $employee): ?> 
+                <li id="employee-<?= $employee->id ?>" data-id="<?= $employee->id ?>" onclick="emplOnClick(event)" >
+                    <a>
+                        <div class="avatar avatar-placeholder">
+                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
+                                <i class="text-3xl bi bi-person-fill"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p><?= $employee->firstName ?></p>
+                            <p class="text-xs uppercase font-semibold opacity-60"><?= $employee->lastName ?></p>
+                        </div>
+                    </a>
+                </li>
+                <? endforeach ?>
+            </ul>
+        </form>
+    </div>
+</div>
+
+<script>
+
+/** @type {HTMLLIElement|null} */
+let selectedPackage = null;
+const bg = "menu-active";
+
+/** @param {MouseEvent} e */
+function packageOnClick(e) {
+
+    if (selectedPackage !== null)
+        selectedPackage.classList.remove(bg);
+    if (selectedPackage === e.currentTarget) {
+        selectedPackage = null;
+        return;
+    }
+    selectedPackage = e.currentTarget;
+    selectedPackage.classList.add(bg);
+}
+
+/** @param {MouseEvent} e */
+function packageUpdateOnClick(e) {
+    e.preventDefault();
+    if (selectedPackage === null)
+        return;
+    window.location.href = `/package/${selectedPackage.dataset.id}`;
+}
+
+</script>
+</main>

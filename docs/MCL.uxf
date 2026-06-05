@@ -1,0 +1,20 @@
+<diagram program="umletino" version="15.1"><zoom_level>13</zoom_level><element><id>UMLClass</id><coordinates><x>260</x><y>130</y><w>182</w><h>169</h></coordinates><panel_attributes>&lt;&lt;table&gt;&gt;
+Employe
+-
+id
+nom
+prenom
+email
+motDePasse
+estLivreur</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>624</x><y>195</y><w>182</w><h>247</h></coordinates><panel_attributes>&lt;&lt;table&gt;&gt;
+Paquet
+-
+id
+numeroPostal
+nomDestinataire
+adresseDestinataire
+latitudeAdresse
+longitudeAdresse
+dateLivraison
+ordreRouteLivraison
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

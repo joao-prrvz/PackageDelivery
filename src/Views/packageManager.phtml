@@ -1,0 +1,112 @@
+<?php
+use PackageDelivery\Schemas\PackageData;
+use PackageDelivery\Schemas\HomeSearch;
+use PackageDelivery\Models\Employee;
+
+use function PackageDelivery\Components\ErrorMessages;
+
+/** @var PackageData $data */
+/** @var HomeSearch $search */
+/** @var Employee[] $employees */
+/** @var bool $editMode */
+/** @var array<string, mixed> $errors */
+?>
+<main class="flex-1 flex justify-evenly items-center p-4">
+    <form method="post" action="" class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <div class="card-body">
+            <h1 class="font-bold text-2xl text-center"><?= $editMode ? "Edit" : "Create" ?> package</h1>
+            <fieldset class="fieldset">
+                <label class="label">Recipient first name</label>
+                <input type="text" name="recipientFirstName" value="<?= $data->recipientFirstName ?>" class="input" placeholder="John"/>
+                <? ErrorMessages($errors, "recipientFirstName") ?>
+
+                <label class="label">Recipient last name</label>
+                <input type="text" name="recipientLastName" value="<?= $data->recipientLastName ?>" class="input" placeholder="Doe"/>
+                <? ErrorMessages($errors, "recipientLastName") ?>
+
+
+                <label class="label">Delivery date</label>
+                <input type="date" name="deliveryDate" value="<?= $data->deliveryDate->format("Y-m-d") ?>" class="input" placeholder="Doe"/>
+                <? ErrorMessages($errors, "deliveryDate") ?>
+
+
+                <label class="label">Recipient address</label>
+                <input type="text" name="recipientAddress" value="<?= $data->recipientAddress ?>" class="input" placeholder="Chemin Gérard-De-Ternier 10"/>
+                <? ErrorMessages($errors, "recipientAddress") ?>
+
+
+                <label class="label">Postal number</label>
+                <input type="text" name="postalNumber" value="<?= $data->postalNumber ?>" class="input" placeholder="1213"/>
+                <? ErrorMessages($errors, "postalNumber") ?>
+
+
+                <? if ($editMode): ?>
+                    <input class="btn btn-primary" type="submit" name="mode" value="Edit">
+                    <input class="btn btn-error" type="submit" name="mode" value="Delete">
+                <? else: ?>
+                    <input class="btn btn-success" type="submit" value="Add">
+                <? endif ?>
+
+                <input type="text" class="hidden" name="deliveryPersonId" value="<?= $data->deliveryPersonId ?> ">
+            </fieldset>
+        </div>
+    </form>
+
+    <div class="flex items-end h-full w-150 ">
+        <form class="h-full bg-base-200 rounded w-full p-4 flex flex-col">
+            <h1 class="text-2xl font-bold text-center mb-4">Delivery Persons</h1>
+            <ul class="menu bg-base-100 rounded-box shadow-md my-4 flex-1 overflow-y-auto w-full">
+                <? foreach ($employees as $employee): ?> 
+                <li id="employee-<?= $employee->id ?>" data-id="<?= $employee->id ?>" onclick="emplOnClick(event)">
+                    <a>
+                        <div class="avatar avatar-placeholder">
+                            <div class="bg-neutral text-neutral-content w-12 rounded-full">
+                                <i class="text-3xl bi bi-person-fill"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p><?= $employee->firstName ?></p>
+                            <p class="text-xs uppercase font-semibold opacity-60"><?= $employee->lastName ?></p>
+                        </div>
+                    </a>
+                </li>
+                <? endforeach ?>
+            </ul>
+            <? ErrorMessages($errors, "deliveryPersonId") ?>
+        </form>
+    </div>
+</main>
+
+<script defer>
+
+/** @type {HTMLLIElement|null} */
+let selectedEmpl = null;
+const bg = "menu-active";
+const deliveryPersonIdInput = document.querySelector("[name='deliveryPersonId']");
+
+/** @param {MouseEvent} e */
+function emplOnClick(e) {
+
+    if (selectedEmpl !== null)
+        selectedEmpl.classList.remove(bg);
+    if (selectedEmpl === e.currentTarget) {
+        selectedEmpl = null;
+        deliveryPersonIdInput.value = 0;    
+        return;
+    }
+    selectedEmpl = e.currentTarget;
+    selectedEmpl.classList.add(bg);
+    deliveryPersonIdInput.value = selectedEmpl.dataset.id;  
+}
+
+document.querySelector("#employee-<?= $data->deliveryPersonId ?>")?.click();
+
+/** @param {MouseEvent} e */
+function packageUpdateOnClick(e) {
+    e.preventDefault();
+    if (selectedEmpl === null)
+        return;
+    window.location.href = `/package/${selectedEmpl.dataset.id}`;
+}
+
+</script>
