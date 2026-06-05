@@ -28,7 +28,7 @@
 | 08:20 - 08:50 | Faire la page de modification et de création de paquets                                                  |
 | 08:55 - 09:30 | Création du model des paquets                                                                            |
 | 09:35 - 10:00 | Ajout de syncronisation entre les champs du paquet à modifier à la page ainsi que les messages d'erreurs |
-| 10:10 - 11:40 |                                                                                                          |
+| 10:10 - 11:40 | Affichage des paquets sur l'accueil des livreurs                                                         |
 
 ### 19/05/26
 
@@ -41,10 +41,13 @@
 
 ### 26/05/26
 
-| Heures        | Tâches                                                                                              |
-| ------------- | --------------------------------------------------------------------------------------------------- |
-| 08:20 - 08:50 | Implémentation de la modification de paquets                                                        |
-| 09:00 - 10:10 | Fix du problème d'encodage de la page web en ajoutant au fichier .env : LANG=C.UTF-8
-LC_ALL=C.UTF-8 |
-| 10:10 - 10:25 | Implémentation de l'ajout de paquets                                                                |
-| 10:30 - 11:40 | Implémentation de l'association d'un livreur à un paquet                                            |
+| Heures        | Tâches                                                                               |
+| ------------- | ------------------------------------------------------------------------------------ |
+| 08:20 - 08:50 | Implémentation de la modification de paquets                                         |
+| 09:00 - 10:10 | Fix du problème d'encodage de la page web en ajoutant au fichier .env : LANG=C.UTF-8 |
+| 10:10 - 10:25 | Implémentation de l'ajout de paquets                                                 |
+| 10:30 - 11:40 | Implémentation de l'association d'un livreur à un paquet                             |
+
+### 02/06/26
+
+Pas présent pour cause d'anglais MATU
